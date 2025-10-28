@@ -174,3 +174,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Ignore generated label images
+*.png
