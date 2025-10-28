@@ -1,7 +1,7 @@
 import argparse
 import textwrap
 
-import requests
+import httpx
 import qrcode
 
 from PIL import Image, ImageDraw, ImageFont
@@ -58,7 +58,7 @@ def main() -> None:
         qr_size = int(label_width/3)
 
     for spool in args.SPOOL_ID:
-        response = requests.get(f"{args.spoolman_address}/api/v1/spool/{spool}")
+        response = httpx.get(f"{args.spoolman_address}/api/v1/spool/{spool}")
         response.raise_for_status()
         data = response.json()
 
