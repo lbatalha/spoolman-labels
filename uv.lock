@@ -27,18 +27,14 @@ wheels = [
 
 [[package]]
 name = "brother-ql-inventree"
-version = "1.3"
-source = { registry = "https://pypi.org/simple" }
+version = "1.4a0"
+source = { git = "https://github.com/matmair/brother_ql-inventree.git#ceb53b8d7b1b22f5300bbb33ac579eedf554b3ff" }
 dependencies = [
     { name = "attrs" },
     { name = "click" },
     { name = "packbits" },
     { name = "pillow" },
     { name = "pyusb" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/a4/93a6edb37217d0062fd18e41d62e4b984bab18bbbc845ecf5aa5ceb64388/brother_ql_inventree-1.3.tar.gz", hash = "sha256:24335ca5f4b3444c692698b599459a7e6c4bd036dd580074c63d39382914fca3", size = 45041, upload-time = "2024-08-06T06:14:50.208Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/af/ea/763daa661dc181c70237afaa52c73793e216c9d2573cc31065f795581ff6/brother_ql_inventree-1.3-py3-none-any.whl", hash = "sha256:0f7e0d78bae04f44bcfe1010ed0d99f98d5b4db1d6179da242d5bd52bb0c9ea4", size = 53000, upload-time = "2024-08-06T06:14:48.545Z" },
 ]
 
 [[package]]
@@ -240,7 +236,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "brother-ql-inventree", specifier = ">=1.3" },
+    { name = "brother-ql-inventree", git = "https://github.com/matmair/brother_ql-inventree.git" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pillow", specifier = ">=12.0.0" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.2" },

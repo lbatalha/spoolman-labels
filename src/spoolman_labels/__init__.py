@@ -4,21 +4,19 @@ import textwrap
 import httpx
 import qrcode
 
-from PIL import Image, ImageDraw, ImageFont
+from time import sleep
 
+from PIL import Image, ImageDraw, ImageFont
 from brother_ql import BrotherQLRaster, create_label
-from brother_ql.backends.helpers import send
+from brother_ql.print_queue import BrotherPrintQueue
+from brother_ql.backends.helpers import send, get_status, get_printer
+
 
 qr_template = "web+spoolman:s-" # spoolman QR code URI format
 qr_border = 4 # 4 is minimum recommended by QR spec
 
 font_scale_header = 0.10
 font_scale_body = 0.035
-
-PRINTER = 'usb://0x04f9:0x209b' # QL-800
-LABEL_NAME = '62'
-
-
 
 def get_spool_qr(spool_id):
     qr = qrcode.QRCode(
@@ -46,8 +44,7 @@ def main() -> None:
     parser.add_argument("SPOOL_ID", nargs='+', type=int, help="Spool IDs to create labels for")
     args = parser.parse_args()
 
-    if args.print:
-        qlr = BrotherQLRaster(args.printer_model)
+    images = []
 
     if args.continuous:
         label_height = args.width
@@ -109,12 +106,19 @@ def main() -> None:
             label = label.crop((0, 0, bbox[2]+qr_border_size, bbox[3]))
             label = label.rotate(90, expand=1)
 
-        print(f"Final Label size: {label.size} px")
+        print(f"Final Label size: {label.size} px\n")
+
+        images.append(label)
 
         if args.verbose:
             label.show()
-        if args.print:
-            create_label(qlr, label, args.label_name, cut=True, dpi_600=False)
-            send(qlr.data, args.printer_address)
-        else:
+        if not args.print:
             label.save(f"{spool}.png")
+
+    if args.print:
+        qlr = BrotherQLRaster(args.printer_model)
+        qlr.exception_on_warning = True
+        printer = get_printer(args.printer_address)
+        print_queue = BrotherPrintQueue(printer, qlr)
+        print_queue.queue_image(images=images, label=args.label_name, no_cut=False)
+        print_queue.submit()
